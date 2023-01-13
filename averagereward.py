@@ -52,6 +52,18 @@ def collecttrajectory(modelname):
         pickle.dump(Trajinfo,fp)
     # np.save(path,Trajinfo)
     averagereward /= NUM_test
+
+def averagerewrewardrandom():
+    env = gym.make(ENV_NAME)
+    reward = 0
+    for _ in range(NUM_test):
+        state = env.reset()
+        done = False
+        while done == False:
+            ns,r,done,_ = env.step(env.action_space.sample())
+            reward += r
+    print("random decision result",reward//NUM_test)
+    # dataset 
 if __name__ == "__main__":
     for sublogpath in os.listdir("logs"):
         path = os.path.join("logs",sublogpath)

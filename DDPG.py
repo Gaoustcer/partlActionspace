@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import gym
+import d4rl
 import time
 import os
 from torch.utils.tensorboard import SummaryWriter
@@ -17,7 +18,7 @@ TAU = 0.01
 MEMORY_CAPACITY = 10000
 BATCH_SIZE = 32
 RENDER = False
-ENV_NAME = 'Pendulum-v1'
+ENV_NAME = 'hopper-medium-v2'
 
 ########################## DDPG Framework ######################
 class ActorNet(nn.Module): # define the network structure for actor and critic
