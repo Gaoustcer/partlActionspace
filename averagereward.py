@@ -8,7 +8,7 @@ from tqdm import tqdm
 from DDPG import ActorNet
 env = gym.make(ENV_NAME)
 def testformodel(modelname):
-    model = torch.load(modelname)
+    model = torch.load(os.path.join(modelname,"models"))
     averagereward = 0
     for _ in tqdm(range(NUM_test)):
         state = env.reset()
@@ -68,5 +68,5 @@ if __name__ == "__main__":
     for sublogpath in os.listdir("logs"):
         path = os.path.join("logs",sublogpath)
         # path = os.path.join(path,'models')
-        # testformodel(path)
-        collecttrajectory(path)
+        testformodel(path)
+        # collecttrajectory(path)

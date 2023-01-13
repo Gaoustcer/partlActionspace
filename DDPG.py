@@ -32,15 +32,15 @@ class ActorNet(nn.Module): # define the network structure for actor and critic
         self.maxaction = maxaction
     
     def actiontransformer(self,action):
-        return (self.maxaction - self.minaction)/4 * action + (self.minaction + self.maxaction)/2 
+        return (self.maxaction - self.minaction)/2 * action + (self.minaction + self.maxaction)/2 
 
     def forward(self, x):
         x = self.fc1(x)
         x = F.relu(x)
         x = self.out(x)
         x = torch.tanh(x)
-        actions = x * 2 # for the game "Pendulum-v0", action range is [-2, 2]
-        return self.actiontransformer(actions)
+        # actions = x * 2 # for the game "Pendulum-v0", action range is [-2, 2]
+        return self.actiontransformer(x)
         # return x
 
 class CriticNet(nn.Module):
@@ -164,8 +164,8 @@ def train(minvalue,maxvalue):
     print('Running time: ', time.time() - t1)
 
 if __name__ == "__main__":
-    train(minvalue=-2,maxvalue=0)
+    train(minvalue=-1,maxvalue=0)
     train(-1,1)
-    train(0,2)
+    train(0,1)
     # train(-2,0)
-    train(-2,2)
+    train(-1/2,1/2)
