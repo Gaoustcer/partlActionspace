@@ -2,6 +2,8 @@ import torch.nn as nn
 
 import torch
 Middlelayer = [64,32,16,8]
+# EPOCH = 32
+
 class Actor(nn.Module):
     def __init__(self,a_dim = 3,s_dim = 11) -> None:
         super(Actor,self).__init__()
