@@ -156,7 +156,8 @@ class BCQ(object):
 				reward = reward.to(reward)
 				next_state = next_state.to(next_state)
 				self.trainanepoch(state,action,next_state,reward,not_done,batch_size)
-			
+			r = self.validate()
+			print("validate in epoch",epoch,r)
 	
 	def train(self, replay_buffer, iterations, batch_size=100):
 
