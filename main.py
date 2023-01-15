@@ -22,5 +22,5 @@ if __name__ == "__main__":
     agent = BCQ(state_dim=sdim,action_dim=adim,max_action=1,device="cuda")
     # dataset = mujocodataset(envname=ENV_NAME)
     dataset = partactionspace()
-    agent.trainwithgeneratedata(dataset,logdir="./logs/BCQ/standard")
+    agent.trainwithgeneratedata(dataset,logdir="./logs/BCQ/dataown")
     pass

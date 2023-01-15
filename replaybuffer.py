@@ -9,8 +9,9 @@ class partactionspace(Dataset):
         super(partactionspace,self).__init__()
         trajpathlist = []
         for subpath in os.listdir(rootpath):
-            path = os.path.join(rootpath,subpath,'Traj.pkl')
-            trajpathlist.append(path)
+            if "BCQ" not in subpath:
+                path = os.path.join(rootpath,subpath,'Traj.pkl')
+                trajpathlist.append(path)
         keys = ['state','action','nextstate','reward','done']
         self.keys = keys
         self.data = {}
