@@ -93,7 +93,8 @@ class VAE(nn.Module):
 		# When sampling from the VAE, the latent vector is clipped to [-0.5, 0.5]
 		if z is None:
 			z = torch.randn((state.shape[0], self.latent_dim)).to(self.device).clamp(-0.5,0.5)
-
+		# print("state is",state)
+		# print("z is",z)
 		a = F.relu(self.d1(torch.cat([state, z], 1)))
 		a = F.relu(self.d2(a))
 		return self.max_action * torch.tanh(self.d3(a))
@@ -144,20 +145,29 @@ class BCQ(object):
 				state = ns
 		return cumulativereward/ENVTEST
 
-	def trainwithgeneratedata(self,dataset,iterations = 32,batch_size = 32):
+	def trainwithgeneratedata(self,dataset,logdir,iterations = 32,batch_size = 32):
 		from tqdm import tqdm
+		from torch.utils.tensorboard import SummaryWriter
+		writer = SummaryWriter(logdir)
 		from torch.utils.data import DataLoader
 		loader = DataLoader(dataset,batch_size=32,shuffle=True)
+		index = 0
+		VALIDATETIMES = 2
 		for epoch in range(iterations):
-			for state,action,reward,done,next_state in tqdm(loader):
+			for state,action,next_state,reward,done in tqdm(loader):
+				if index % VALIDATETIMES == 0:
+					r = self.validate()
+					# print("validate in epoch",index//16,r)
+					writer.add_scalar("reward",r,index//VALIDATETIMES)
 				state = state.to(self.device)
 				action = action.to(self.device)
+				# print(done)
 				not_done = (~done).to(self.device)
-				reward = reward.to(reward)
-				next_state = next_state.to(next_state)
+				reward = reward.to(self.device)
+				next_state = next_state.to(self.device)
 				self.trainanepoch(state,action,next_state,reward,not_done,batch_size)
-			r = self.validate()
-			print("validate in epoch",epoch,r)
+				index += 1
+				
 	
 	def train(self, replay_buffer, iterations, batch_size=100):
 

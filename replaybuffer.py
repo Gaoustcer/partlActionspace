@@ -56,6 +56,7 @@ class mujocodataset(Dataset):
     
     def __getitem__(self,index):
         l = []
+        # print(self.data['terminals'])
         for key in self.keys:
             l.append(self.data[key][index])
         return l
@@ -63,12 +64,13 @@ class mujocodataset(Dataset):
 
 
 if __name__ == "__main__":
-    data = partactionspace()
+    # data = partactionspace()
+    data = mujocodataset()
     from torch.utils.data import DataLoader
     loader = DataLoader(data,batch_size=32)
     # for obs,action,
     print(len(data))
-    for obs,action,reward,done,next_obs in loader:
+    for obs,action,next_obs,reward,done in loader:
         print(obs.shape)
         print(next_obs.shape)
         print(action.shape)
