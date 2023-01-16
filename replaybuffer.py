@@ -22,7 +22,10 @@ class partactionspace(Dataset):
             with open(path,'rb') as fp:
                 data = pickle.load(fp)
                 for key in keys:
-                    self.data[key].append(torch.from_numpy(data[key]).T)
+                    if 'done' not in key:
+                        self.data[key].append(torch.from_numpy(data[key]).T.to(torch.float32))
+                    else:
+                        self.data[key].append(torch.from_numpy(data[key]).T)
         for key in keys:
             # print(key)
             # for data in self.data[key]:
