@@ -141,7 +141,8 @@ def train(minvalue,maxvalue):
     for i in range(EPISODES):
         s = env.reset()
         ep_r = 0
-        for j in range(EP_STEPS):
+        done = False
+        while done == False:
             # if RENDER: env.render()
             # add explorative noise to action
             a = ddpg.choose_action(s)
@@ -155,17 +156,19 @@ def train(minvalue,maxvalue):
                 
             s = s_
             ep_r += r
-            if j == EP_STEPS - 1:
+            if done == True:
                 writer.add_scalar("reward",ep_r,i)
                 print('Episode: ', i, ' Reward: %i' % (ep_r), 'Explore: %.2f' % var)
                 if ep_r > -300 : RENDER = True
                 break
+        # if ep_r > 500
     torch.save(ddpg.actor_eval,os.path.join(path,'models'))
     print('Running time: ', time.time() - t1)
 
 if __name__ == "__main__":
-    train(minvalue=-1,maxvalue=0)
     train(-1,1)
-    train(0,1)
+    # train(minvalue=-1,maxvalue=0)
+    # train(-1,1)
+    # train(0,1)
     # train(-2,0)
-    train(-1/2,1/2)
+    # train(-1/2,1/2)
