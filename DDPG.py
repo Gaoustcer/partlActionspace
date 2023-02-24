@@ -34,13 +34,15 @@ class ActorNet(nn.Module): # define the network structure for actor and critic
     def actiontransformer(self,action):
         return (self.maxaction - self.minaction)/2 * action + (self.minaction + self.maxaction)/2 
 
-    def forward(self, x):
-        x = self.fc1(x)
+    def forward(self, obs,state = None,info = {}):
+        if isinstance(obs,np.ndarray):
+            obs = torch.from_numpy(obs).to(next(self.parameters()).device).to(torch.float32)
+        x = self.fc1(obs)
         x = F.relu(x)
         x = self.out(x)
         x = torch.tanh(x)
         # actions = x * 2 # for the game "Pendulum-v0", action range is [-2, 2]
-        return self.actiontransformer(x)
+        return self.actiontransformer(x),None
         # return x
 
 class CriticNet(nn.Module):
@@ -53,6 +55,10 @@ class CriticNet(nn.Module):
         self.out = nn.Linear(30, 1)
         self.out.weight.data.normal_(0, 0.1)
     def forward(self, s, a):
+        if isinstance(s,np.ndarray):
+            s = torch.from_numpy(s).to(next(self.parameters()).device).to(torch.float32)
+        if isinstance(a,np.ndarray):
+            a = torch.from_numpy(a).to(next(self.parameters()).device).to(torch.float32)
         x = self.fcs(s)
         y = self.fca(a)
         actions_value = self.out(F.relu(x+y))
